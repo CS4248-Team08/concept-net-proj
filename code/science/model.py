@@ -64,8 +64,8 @@ class ChainEncoder(nn.Module):
         e_features is structured similarly
         '''
         v_features, e_features = input
-        # v_features.shape = (num_vertices, batch_size, variable feature_len)
-        # e_features.shape = (num_edges, batch_size, variable feature_len)
+        # v_features.shape == (num_vertices, batch_size, variable feature_len)
+        # e_features.shape == (num_edges, batch_size, variable feature_len)
 
         v_encodes = []
         for i in range(len(v_features)):  # 4 vertices 
@@ -93,10 +93,6 @@ class ChainEncoder(nn.Module):
 
         combined_encs = [0] * (len(v_encodes)+len(e_encodes))
         # interleave vertices and edges
-        # for i in range(len(v_features)):
-        #     combined_encs[i*2] = v_encodes[i].detach().clone()
-        # for i in range(len(e_features)):
-        #     combined_encs[i*2+1] = e_encodes[i].detach().clone()
         combined_encs[::2] = v_encodes
         combined_encs[1::2] = e_encodes
         combined_encs = torch.stack(combined_encs, dim=0).detach().clone()
@@ -104,10 +100,8 @@ class ChainEncoder(nn.Module):
 
         if self.rnn_type == 'RNN':
             output, hidden = self.rnn(combined_encs)
-            #output, hidden = self.rnn(encodes)
         elif self.rnn_type == 'LSTM':
             output, (hidden, cell) = self.lstm(combined_encs)
-            #output, (hidden, cell) = self.lstm(encodes)
         if self.pooling == 'last':
             return output[-1]
         else:
