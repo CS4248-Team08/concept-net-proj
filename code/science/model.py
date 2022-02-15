@@ -93,13 +93,13 @@ class ChainEncoder(nn.Module):
 
         combined_encs = [0] * (len(v_encodes)+len(e_encodes))
         # interleave vertices and edges
-        for i in range(len(v_features)):
-            combined_encs[i*2] = v_encodes[i].detach().clone()
-        for i in range(len(e_features)):
-            combined_encs[i*2+1] = e_encodes[i].detach().clone()
-        # combined_encs[::2] = torch.tensor(v_encodes).clone()
-        # combined_encs[1::2] = torch.tensor(e_encodes).clone()
-        combined_encs = torch.stack(combined_encs, dim=0)
+        # for i in range(len(v_features)):
+        #     combined_encs[i*2] = v_encodes[i].detach().clone()
+        # for i in range(len(e_features)):
+        #     combined_encs[i*2+1] = e_encodes[i].detach().clone()
+        combined_encs[::2] = v_encodes
+        combined_encs[1::2] = e_encodes
+        combined_encs = torch.stack(combined_encs, dim=0).detach().clone()
         # combined_encs has shape (#V+#E) x batch_size x out_length
 
         if self.rnn_type == 'RNN':
