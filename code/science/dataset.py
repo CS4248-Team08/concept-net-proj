@@ -119,7 +119,7 @@ class Dataset:
                     feature.append(
                         np.zeros((N, all_feature_lengths[f]), dtype='float32')
                     )
-                    
+
         return v_features, e_features
 
     def get_train_pairs(self, N, randomize_dir=True):
