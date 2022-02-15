@@ -1,0 +1,29 @@
+Using device: cuda
+loading v_enc_dim300
+loading v_freq_freq
+loading v_deg
+loading v_sense
+loading e_vertexsim
+loading e_dir
+loading e_rel
+loading e_weightsource
+loading e_srank_rel
+loading e_trank_rel
+loading e_sense
+loading problem plain texts
+loading labeled pairs
+Batch size: 1000
+defining architecture
+Start training
+Progress: 0.00%, loss: 0.691283643245697, time spent: 0.00 minutes
+Progress: 1.67%, loss: 0.676654040813446, time spent: 0.30 minutes
+Progress: 3.33%, loss: 0.6640625596046448, time spent: 0.59 minutes
+Progress: 5.00%, loss: 0.6557227969169617, time spent: 0.87 minutes
+Traceback (most recent call last):
+  File "/home/w/wangpei/CS4248/concept-net-proj/code/science/learn.py", line 103, in <module>
+    encoder, predictor, loss = train(dataset, feature_len, num_iter, N)
+  File "/home/w/wangpei/CS4248/concept-net-proj/code/science/learn.py", line 39, in train
+    chains_A, chains_B, y = dataset.get_train_pairs(N)
+  File "/home/w/wangpei/CS4248/concept-net-proj/code/science/dataset.py", line 139, in get_train_pairs
+    good, bad = next(self.cycled_train_pairs)
+KeyboardInterrupt

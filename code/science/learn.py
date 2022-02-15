@@ -11,6 +11,7 @@ from model import ChainEncoder, Predictor, JointModel
 from dataset import Dataset
 from multiprocessing import Pool
 import time
+from datetime import datetime
 
 
 def train(dataset, fea_len, num_iter=4000, N=1000, out_file='train.log'):
@@ -50,7 +51,7 @@ def train(dataset, fea_len, num_iter=4000, N=1000, out_file='train.log'):
             print(
                 f"Progress: {100*train_iter/num_iter:.2f}%, loss: {loss_val.item()}, time spent: {(time.time() - start)/60:.2f} minutes")
 
-            out_file.write(f"Progress: {100*train_iter/num_iter:.2f}%, loss: {loss_val.item()}")
+            out_file.write(f"{num_iter}, loss: {loss_val.item()}\n")
             torch.save(encoder.state_dict(),
                        f'ckpt/{train_iter}_encoder.model')
             torch.save(predictor.state_dict(),
@@ -63,7 +64,7 @@ def train(dataset, fea_len, num_iter=4000, N=1000, out_file='train.log'):
 
 def test(dataset, encoder, predictor, loss, out_file='test.log'):
     if isinstance(out_file, str):
-        out_file = open(out_file, 'w')
+        out_file = open(out_file, 'a')
 
     print("Start testing")
     chains_A, chains_B, y = dataset.get_test_pairs(randomize_dir=True, return_id=False)
@@ -80,6 +81,7 @@ def test(dataset, encoder, predictor, loss, out_file='test.log'):
         cur_acc = (pred == y).sum() / len(y)
 
         print(f'test acc: {cur_acc}')
+        out_file.write("\nTest time: {}\n".format(datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
         out_file.write(f'{cur_acc}\n')
 
     out_file.close()
@@ -96,7 +98,7 @@ feature_len = 20
 split_frac = 0.8
 dataset = Dataset(features, split_frac, device)
 
-num_iter = 4000
+num_iter = 6000
 N = 1000
 print(f'Batch size: {N}')
 
