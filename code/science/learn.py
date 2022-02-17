@@ -81,8 +81,8 @@ def test(dataset, encoder, predictor, loss, out_file='test.log'):
         cur_acc = (pred == y).sum() / len(y)
 
         print(f'test acc: {cur_acc}')
-        out_file.write("\nTest time: {}\n".format(datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
-        out_file.write(f'{cur_acc}\n')
+        out_file.write("Test time: {}\n".format(datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
+        out_file.write(f'{cur_acc}\n\n')
 
     out_file.close()
 
