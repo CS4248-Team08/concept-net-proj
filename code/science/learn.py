@@ -51,7 +51,7 @@ def train(dataset, fea_len, num_iter=4000, N=1000, out_file='train.log'):
             print(
                 f"Progress: {100*train_iter/num_iter:.2f}%, loss: {loss_val.item()}, time spent: {(time.time() - start)/60:.2f} minutes")
 
-            out_file.write(f"{num_iter}, loss: {loss_val.item()}\n")
+            out_file.write(f"{train_iter}, loss: {loss_val.item()}\n")
             torch.save(encoder.state_dict(),
                        f'ckpt/{train_iter}_encoder.model')
             torch.save(predictor.state_dict(),
