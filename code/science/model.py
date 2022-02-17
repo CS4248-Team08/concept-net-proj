@@ -75,7 +75,7 @@ class ChainEncoder(nn.Module):
                 if v_enc is None:
                     v_enc = curr_encoder(v_features[i][j])
                 else:
-                    v_enc += curr_encoder(v_features[i][j])
+                    v_enc = v_enc + curr_encoder(v_features[i][j])
             v_enc = v_enc / len(v_features[i])  # each feature encode is of shape (batch_size, out_length)
             v_encodes.append(v_enc)
 
@@ -87,16 +87,25 @@ class ChainEncoder(nn.Module):
                 if e_enc is None:
                     e_enc = curr_encoder(e_features[i][j])
                 else:
-                    e_enc += curr_encoder(e_features[i][j])
+                    e_enc = e_enc + curr_encoder(e_features[i][j])
             e_enc = e_enc / len(e_features[i])
             e_encodes.append(e_enc)
 
-        combined_encs = [0] * (len(v_encodes)+len(e_encodes))
+        #combined_encs = [0] * (len(v_encodes)+len(e_encodes))
+        combined_encs = []
         # interleave vertices and edges
-        combined_encs[::2] = v_encodes
-        combined_encs[1::2] = e_encodes
-        combined_encs = torch.stack(combined_encs, dim=0).detach().clone()
+        for i in range(len(v_encodes) + len(e_encodes)):
+            if i%2==0:
+                combined_encs.append(v_encodes[i//2])
+            else:
+                combined_encs.append(e_encodes[(i-1)//2])
+        combined_encs = torch.stack(combined_encs, dim=0)
         # combined_encs has shape (#V+#E) x batch_size x out_length
+
+        # combined_encs[::2] = v_encodes
+        # combined_encs[1::2] = e_encodes
+        # combined_encs = torch.stack(combined_encs, dim=0).detach().clone()
+        
 
         if self.rnn_type == 'RNN':
             output, hidden = self.rnn(combined_encs)
