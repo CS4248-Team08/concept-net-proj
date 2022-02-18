@@ -174,12 +174,6 @@ class Dataset:
         y = y.to(device=self.device)
 
         return ((v_features_A, e_features_A), (v_features_B, e_features_B), y)
-    
-    def get_train_epoch(self, randomize_dir=True):
-        '''
-        Returns 1 epoch of training pairs
-        '''
-        return self.get_train_pairs(self.train_size, randomize_dir)
 
     def get_test_pairs(self, randomize_dir=True, return_id=False):
         '''
