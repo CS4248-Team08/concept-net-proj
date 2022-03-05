@@ -1,5 +1,6 @@
 from __future__ import division
 
+import math
 import numpy as np
 import torch
 from torch import nn
@@ -24,6 +25,27 @@ class FeatureTransformer(nn.Module):
     def forward(self, input):
         return relu(self.linear(input))
 
+class PositionalEncoding(nn.Module):
+
+    def __init__(self, d_model: int, dropout: float = 0.1, max_len: int = 5000):
+        super().__init__()
+        self.dropout = nn.Dropout(p=dropout)
+
+        position = torch.arange(max_len).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2) * (-math.log(10000.0) / d_model))
+        pe = torch.zeros(max_len, 1, d_model)
+        pe[:, 0, 0::2] = torch.sin(position * div_term)
+        pe[:, 0, 1::2] = torch.cos(position * div_term)
+        self.register_buffer('pe', pe)
+
+    def forward(self, x: torch.Tensor) -> torch.Tensor:
+        """
+        Args:
+            x: Tensor, shape [seq_len, batch_size, embedding_dim]
+        """
+        x = x + self.pe[:x.size(0)]
+        return self.dropout(x)
+
 
 class ChainEncoder(nn.Module):
     '''
@@ -35,7 +57,8 @@ class ChainEncoder(nn.Module):
         super(ChainEncoder, self).__init__()
         self.out_length = feature_enc_length = out_length
         num_layers = 1
-        self.rnn_type = 'LSTM'
+        self.path_encoder_type = 'attention'
+        self.num_heads = 4
         self.pooling = pooling
         self.v_feature_lengths = v_feature_lengths
         self.e_feature_lengths = e_feature_lengths
@@ -50,12 +73,16 @@ class ChainEncoder(nn.Module):
                 FeatureTransformer(d_in, feature_enc_length))
 
         # RNN famlity layer: input (seq_len, batch_size, d_in), output (seq_len, batch_size, d_out * D) where D=2 for bidirectional, D=1 otherwise
-        if self.rnn_type == 'RNN':
+        if self.path_encoder_type == 'RNN':
             self.rnn = nn.RNN(input_size=feature_enc_length,
                               hidden_size=out_length, num_layers=num_layers)
-        elif self.rnn_type == 'LSTM':
+        elif self.path_encoder_type == 'LSTM':
             self.lstm = nn.LSTM(input_size=feature_enc_length,
                                 hidden_size=out_length, num_layers=num_layers)
+        elif self.path_encoder_type == 'attention':
+            self.position_encoder = PositionalEncoding(d_model=out_length, dropout=0.1)
+            encoder_layer = nn.TransformerEncoderLayer(d_model=out_length, nhead=8)
+            self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=3)
 
     def forward(self, input):
         '''
@@ -108,10 +135,14 @@ class ChainEncoder(nn.Module):
         # combined_encs[1::2] = e_encodes
         # combined_encs = torch.stack(combined_encs, dim=0).detach().clone()
 
-        if self.rnn_type == 'RNN':
+        if self.path_encoder_type == 'RNN':
             output, hidden = self.rnn(combined_encs)
-        elif self.rnn_type == 'LSTM':
+        elif self.path_encoder_type == 'LSTM':
             output, (hidden, cell) = self.lstm(combined_encs)
+        elif self.path_encoder_type == 'attention':
+            output = self.position_encoder(combined_encs)
+            output = self.transformer_encoder(output)
+
         if self.pooling == 'last':
             return output[-1]
         else:

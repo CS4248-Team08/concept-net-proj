@@ -36,6 +36,7 @@ def train(dataset, fea_len, num_iter=4000, N=1000, out_file='train.log'):
 
     print('Start training')
     start = time.time()
+    encoder.train()
     for train_iter in range(num_iter):
         chains_A, chains_B, y = dataset.get_train_pairs(N)
         output_A = encoder(chains_A)
@@ -69,6 +70,7 @@ def test(dataset, encoder, predictor, loss, out_file='test.log'):
     print("Start testing")
     chains_A, chains_B, y = dataset.get_test_pairs(randomize_dir=True, return_id=False)
 
+    encoder.eval()
     with torch.no_grad():
         output_test_A = encoder(chains_A)
         output_test_B = encoder(chains_B)
@@ -94,7 +96,7 @@ print(f"Using device: {device}")
 
 features = ['v_enc_dim300', 'v_freq_freq', 'v_deg', 'v_sense', 'e_vertexsim',
             'e_dir', 'e_rel', 'e_weightsource', 'e_srank_rel', 'e_trank_rel', 'e_sense']
-feature_len = 20
+feature_len = 128
 split_frac = 0.8
 dataset = Dataset(features, split_frac, device)
 
