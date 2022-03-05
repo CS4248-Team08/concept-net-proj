@@ -6,6 +6,7 @@ from torch import nn
 from torch.autograd import Variable
 from torch.nn.functional import relu
 
+
 class FeatureTransformer(nn.Module):
     '''
     take an n x d_in matrix and transform it into a n x d_out matrix
@@ -68,7 +69,7 @@ class ChainEncoder(nn.Module):
         # e_features.shape == (num_edges, batch_size, variable feature_len)
 
         v_encodes = []
-        for i in range(len(v_features)):  # 4 vertices 
+        for i in range(len(v_features)):  # 4 vertices
             v_enc = None
             for j in range(len(v_features[i])):  # feature in each vertex
                 curr_encoder = self.v_feature_encoders[j]
@@ -76,7 +77,8 @@ class ChainEncoder(nn.Module):
                     v_enc = curr_encoder(v_features[i][j])
                 else:
                     v_enc = v_enc + curr_encoder(v_features[i][j])
-            v_enc = v_enc / len(v_features[i])  # each feature encode is of shape (batch_size, out_length)
+            # each feature encode is of shape (batch_size, out_length)
+            v_enc = v_enc / len(v_features[i])
             v_encodes.append(v_enc)
 
         e_encodes = []
@@ -95,7 +97,7 @@ class ChainEncoder(nn.Module):
         combined_encs = []
         # interleave vertices and edges
         for i in range(len(v_encodes) + len(e_encodes)):
-            if i%2==0:
+            if i % 2 == 0:
                 combined_encs.append(v_encodes[i//2])
             else:
                 combined_encs.append(e_encodes[(i-1)//2])
@@ -105,7 +107,6 @@ class ChainEncoder(nn.Module):
         # combined_encs[::2] = v_encodes
         # combined_encs[1::2] = e_encodes
         # combined_encs = torch.stack(combined_encs, dim=0).detach().clone()
-        
 
         if self.rnn_type == 'RNN':
             output, hidden = self.rnn(combined_encs)
@@ -134,6 +135,7 @@ class Predictor(nn.Module):
         combined = torch.cat((a, b), dim=1)
         return self.logsoftmax(combined)
 
+
 class JointModel(nn.Module):
     '''
     Combine ChainEncoder and Predictor together
@@ -141,7 +143,8 @@ class JointModel(nn.Module):
 
     def __init__(self,  v_feature_lengths, e_feature_lengths, out_length, pooling):
         super(JointModel, self).__init__()
-        self.encoder = ChainEncoder(v_feature_lengths, e_feature_lengths, out_length, pooling)
+        self.encoder = ChainEncoder(
+            v_feature_lengths, e_feature_lengths, out_length, pooling)
         self.predictor = Predictor(out_length)
 
     def forward(self, input1, input2):

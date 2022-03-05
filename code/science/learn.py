@@ -98,9 +98,11 @@ feature_len = 20
 split_frac = 0.8
 dataset = Dataset(features, split_frac, device)
 
-num_iter = 6000
-N = 1000
-print(f'Batch size: {N}')
+
+num_epoch = 500
+N = 1024  # batch size
+num_iter = num_epoch * dataset.train_size//N
+print(f'Batch size: {N}, Number of iter: {num_iter}')
 
 encoder, predictor, loss = train(dataset, feature_len, num_iter, N)
 test(dataset, encoder, predictor, loss)
