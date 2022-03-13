@@ -27,3 +27,72 @@ Traceback (most recent call last):
   File "/home/w/wangpei/CS4248/concept-net-proj/code/science/dataset.py", line 139, in get_train_pairs
     good, bad = next(self.cycled_train_pairs)
 KeyboardInterrupt
+Using device: cuda
+loading v_enc_dim300
+loading v_freq_freq
+loading v_deg
+loading v_sense
+loading e_vertexsim
+loading e_dir
+loading e_rel
+loading e_weightsource
+loading e_srank_rel
+loading e_trank_rel
+loading e_sense
+loading problem plain texts
+loading labeled pairs
+Batch size: 1024, Number of iter: 4801
+defining architecture
+Start training
+Progress: 0.00%, loss: 0.6965314745903015, time spent: 0.02 minutes
+Progress: 2.08%, loss: 0.6961742043495178, time spent: 0.40 minutes
+Progress: 4.17%, loss: 0.6862603425979614, time spent: 0.96 minutes
+Progress: 6.25%, loss: 0.676435112953186, time spent: 1.34 minutes
+Progress: 8.33%, loss: 0.6741427183151245, time spent: 1.71 minutes
+Progress: 10.41%, loss: 0.6582368016242981, time spent: 2.09 minutes
+Progress: 12.50%, loss: 0.6835002303123474, time spent: 2.48 minutes
+Progress: 14.58%, loss: 0.6629329919815063, time spent: 2.86 minutes
+Progress: 16.66%, loss: 0.6653751134872437, time spent: 3.24 minutes
+Progress: 18.75%, loss: 0.6594874858856201, time spent: 3.61 minutes
+Progress: 20.83%, loss: 0.6418495178222656, time spent: 4.10 minutes
+Progress: 22.91%, loss: 0.6574494242668152, time spent: 4.47 minutes
+Progress: 24.99%, loss: 0.6567270159721375, time spent: 4.85 minutes
+Progress: 27.08%, loss: 0.6542115807533264, time spent: 5.23 minutes
+Progress: 29.16%, loss: 0.6508702039718628, time spent: 5.60 minutes
+Progress: 31.24%, loss: 0.6353182792663574, time spent: 5.98 minutes
+Progress: 33.33%, loss: 0.6415197253227234, time spent: 6.35 minutes
+Progress: 35.41%, loss: 0.6420935392379761, time spent: 6.74 minutes
+Progress: 37.49%, loss: 0.6484910249710083, time spent: 7.11 minutes
+Progress: 39.58%, loss: 0.6500870585441589, time spent: 7.49 minutes
+Progress: 41.66%, loss: 0.6433709263801575, time spent: 7.87 minutes
+Progress: 43.74%, loss: 0.635901153087616, time spent: 8.24 minutes
+Progress: 45.82%, loss: 0.6294757127761841, time spent: 8.62 minutes
+Progress: 47.91%, loss: 0.6490894556045532, time spent: 8.99 minutes
+Progress: 49.99%, loss: 0.6402909755706787, time spent: 9.37 minutes
+Progress: 52.07%, loss: 0.6508578658103943, time spent: 9.74 minutes
+Progress: 54.16%, loss: 0.6269701719284058, time spent: 10.12 minutes
+Progress: 56.24%, loss: 0.6288027763366699, time spent: 10.49 minutes
+Progress: 58.32%, loss: 0.6232346296310425, time spent: 10.87 minutes
+Progress: 60.40%, loss: 0.6369540095329285, time spent: 11.27 minutes
+Progress: 62.49%, loss: 0.6323210000991821, time spent: 11.65 minutes
+Progress: 64.57%, loss: 0.6336866021156311, time spent: 12.02 minutes
+Progress: 66.65%, loss: 0.6138064861297607, time spent: 12.52 minutes
+Progress: 68.74%, loss: 0.621601402759552, time spent: 13.07 minutes
+Progress: 70.82%, loss: 0.6183764934539795, time spent: 13.44 minutes
+Progress: 72.90%, loss: 0.6390827298164368, time spent: 13.82 minutes
+Progress: 74.98%, loss: 0.6216995716094971, time spent: 14.19 minutes
+Progress: 77.07%, loss: 0.6321492195129395, time spent: 14.57 minutes
+Progress: 79.15%, loss: 0.6202043890953064, time spent: 14.94 minutes
+Progress: 81.23%, loss: 0.6017122864723206, time spent: 15.32 minutes
+Progress: 83.32%, loss: 0.6515412330627441, time spent: 15.86 minutes
+Progress: 85.40%, loss: 0.648193359375, time spent: 16.23 minutes
+Progress: 87.48%, loss: 0.6171160936355591, time spent: 16.60 minutes
+Progress: 89.56%, loss: 0.6317399740219116, time spent: 16.98 minutes
+Progress: 91.65%, loss: 0.6246262192726135, time spent: 17.35 minutes
+Progress: 93.73%, loss: 0.6333662271499634, time spent: 17.72 minutes
+Progress: 95.81%, loss: 0.6349874138832092, time spent: 18.10 minutes
+Progress: 97.90%, loss: 0.6320613622665405, time spent: 18.47 minutes
+Progress: 99.98%, loss: 0.6391408443450928, time spent: 18.85 minutes
+Finish training, time spent: 18.85 minutes
+Start testing
+test acc: 0.6579910532736885

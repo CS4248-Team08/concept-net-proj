@@ -58,7 +58,6 @@ class ChainEncoder(nn.Module):
         self.out_length = feature_enc_length = out_length
         num_layers = 1
         self.path_encoder_type = 'attention'
-        self.num_heads = 4
         self.pooling = pooling
         self.v_feature_lengths = v_feature_lengths
         self.e_feature_lengths = e_feature_lengths

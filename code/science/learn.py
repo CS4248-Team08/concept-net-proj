@@ -20,7 +20,7 @@ def train(dataset, fea_len, num_iter=4000, N=1000, out_file='train.log'):
 
     print('defining architecture')
     encoder = ChainEncoder(dataset.get_v_fea_len(),
-                           dataset.get_e_fea_len(), fea_len, 'last')
+                           dataset.get_e_fea_len(), fea_len, 'mean')
     predictor = Predictor(fea_len)
     # model = JointModel(dataset.get_v_fea_len(), dataset.get_e_fea_len(), fea_len, 'last')
     loss = nn.NLLLoss()
