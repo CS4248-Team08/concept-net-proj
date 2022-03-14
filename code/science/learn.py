@@ -98,11 +98,10 @@ print(f"Using device: {device}")
 
 features = ['v_enc_dim300', 'v_freq_freq', 'v_deg', 'v_sense', 'e_vertexsim',
             'e_dir', 'e_rel', 'e_weightsource', 'e_srank_rel', 'e_trank_rel', 'e_sense']
-feature_enc_len = 100
 split_frac = 0.8
 dataset = Dataset(features, split_frac, device)
 
-
+feature_enc_len = 100
 num_epoch = 200
 N = 1024  # batch size
 num_iter = num_epoch * dataset.train_size//N

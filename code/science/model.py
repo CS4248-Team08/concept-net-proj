@@ -88,7 +88,7 @@ class ChainEncoder(nn.Module):
         elif self.path_encoder_type == 'Attention':
             self.position_encoder = PositionalEncoding(d_model=out_length, dropout=0.1)
             encoder_layer = nn.TransformerEncoderLayer(d_model=out_length, nhead=4, dim_feedforward=256, dropout=0.1)
-            self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=1)
+            self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=2)
 
     def _generate_square_subsequent_mask(self, sz):
         mask = (torch.triu(torch.ones(sz, sz)) == 1).transpose(0, 1)
