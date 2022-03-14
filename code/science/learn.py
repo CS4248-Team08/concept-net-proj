@@ -14,13 +14,14 @@ import time
 from datetime import datetime
 
 
-def train(dataset, fea_len, num_iter=4000, N=1000, out_file='train.log'):
+def train(dataset, fea_len, num_iter=4000, N=1000, path_enc_type="LSTM", out_file='train.log'):
     if isinstance(out_file, str):
         out_file = open(out_file, 'w')
 
     print('defining architecture')
     encoder = ChainEncoder(dataset.get_v_fea_len(),
-                           dataset.get_e_fea_len(), fea_len, 'mean')
+                           dataset.get_e_fea_len(), 
+                           out_length=fea_len, pooling='mean', path_encoder_type=path_enc_type)
     predictor = Predictor(fea_len)
     # model = JointModel(dataset.get_v_fea_len(), dataset.get_e_fea_len(), fea_len, 'last')
     loss = nn.NLLLoss()
@@ -84,7 +85,8 @@ def test(dataset, encoder, predictor, loss, out_file='test.log'):
 
         print(f'test acc: {cur_acc}')
         out_file.write("Test time: {}\n".format(datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
-        out_file.write(f'{cur_acc}\n\n')
+        out_file.write(f"Test config: feature_enc_len:{feature_enc_len}, path_enc_type:{path_enc_type}, N:{N}, epoch:{num_epoch}\n")
+        out_file.write(f'Test accuracy: {cur_acc}\n\n')
 
     out_file.close()
 
@@ -96,15 +98,16 @@ print(f"Using device: {device}")
 
 features = ['v_enc_dim300', 'v_freq_freq', 'v_deg', 'v_sense', 'e_vertexsim',
             'e_dir', 'e_rel', 'e_weightsource', 'e_srank_rel', 'e_trank_rel', 'e_sense']
-feature_len = 128
+feature_enc_len = 100
 split_frac = 0.8
 dataset = Dataset(features, split_frac, device)
 
 
-num_epoch = 500
+num_epoch = 200
 N = 1024  # batch size
 num_iter = num_epoch * dataset.train_size//N
-print(f'Batch size: {N}, Number of iter: {num_iter}')
+path_enc_type = "Attention"
+print(f"Config: feature_enc_len:{feature_enc_len}, path_enc_type:{path_enc_type}, N:{N}, n_epoch:{num_epoch}")
 
-encoder, predictor, loss = train(dataset, feature_len, num_iter, N)
+encoder, predictor, loss = train(dataset, feature_enc_len, num_iter, N, path_enc_type)
 test(dataset, encoder, predictor, loss)

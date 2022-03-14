@@ -96,3 +96,216 @@ Progress: 99.98%, loss: 0.6391408443450928, time spent: 18.85 minutes
 Finish training, time spent: 18.85 minutes
 Start testing
 test acc: 0.6579910532736885
+Using device: cuda
+loading v_enc_dim300
+loading v_freq_freq
+loading v_deg
+loading v_sense
+loading e_vertexsim
+loading e_dir
+loading e_rel
+loading e_weightsource
+loading e_srank_rel
+loading e_trank_rel
+loading e_sense
+loading problem plain texts
+loading labeled pairs
+Config: feature_enc_len:100, path_enc_type:Attention, N:1024, n_epoch:2000
+defining architecture
+Start training
+Progress: 0.00%, loss: 0.6972091794013977, time spent: 0.01 minutes
+Progress: 0.52%, loss: 0.6858298778533936, time spent: 0.34 minutes
+Progress: 1.04%, loss: 0.6798483729362488, time spent: 0.67 minutes
+Progress: 1.56%, loss: 0.6776692271232605, time spent: 0.99 minutes
+Progress: 2.08%, loss: 0.6720588207244873, time spent: 1.32 minutes
+Progress: 2.60%, loss: 0.6682230234146118, time spent: 1.65 minutes
+Progress: 3.12%, loss: 0.6486257314682007, time spent: 1.97 minutes
+Progress: 3.64%, loss: 0.6416066884994507, time spent: 2.30 minutes
+Progress: 4.17%, loss: 0.6611223220825195, time spent: 2.63 minutes
+Progress: 4.69%, loss: 0.6347634196281433, time spent: 2.95 minutes
+Progress: 5.21%, loss: 0.6124160885810852, time spent: 3.28 minutes
+Progress: 5.73%, loss: 0.6306029558181763, time spent: 3.61 minutes
+Progress: 6.25%, loss: 0.6453613638877869, time spent: 3.93 minutes
+Progress: 6.77%, loss: 0.6365349292755127, time spent: 4.26 minutes
+Progress: 7.29%, loss: 0.6020881533622742, time spent: 4.58 minutes
+Progress: 7.81%, loss: 0.610383152961731, time spent: 4.89 minutes
+Progress: 8.33%, loss: 0.6196171641349792, time spent: 5.21 minutes
+Progress: 8.85%, loss: 0.6206026673316956, time spent: 5.52 minutes
+Progress: 9.37%, loss: 0.6065540909767151, time spent: 5.83 minutes
+Progress: 9.89%, loss: 0.5966736078262329, time spent: 6.15 minutes
+Progress: 10.41%, loss: 0.600089967250824, time spent: 6.46 minutes
+Progress: 10.93%, loss: 0.6044893264770508, time spent: 6.77 minutes
+Progress: 11.46%, loss: 0.5934549570083618, time spent: 7.09 minutes
+Progress: 11.98%, loss: 0.589073896408081, time spent: 7.41 minutes
+Progress: 12.50%, loss: 0.6029725074768066, time spent: 7.72 minutes
+Progress: 13.02%, loss: 0.6158289313316345, time spent: 8.04 minutes
+Progress: 13.54%, loss: 0.5860644578933716, time spent: 8.35 minutes
+Progress: 14.06%, loss: 0.581186830997467, time spent: 8.67 minutes
+Progress: 14.58%, loss: 0.6023918390274048, time spent: 8.98 minutes
+Progress: 15.10%, loss: 0.6150465607643127, time spent: 9.30 minutes
+Progress: 15.62%, loss: 0.6115512251853943, time spent: 9.61 minutes
+Progress: 16.14%, loss: 0.5842172503471375, time spent: 9.93 minutes
+Progress: 16.66%, loss: 0.583141028881073, time spent: 10.24 minutes
+Progress: 17.18%, loss: 0.5808272361755371, time spent: 10.55 minutes
+Progress: 17.70%, loss: 0.5991500020027161, time spent: 10.87 minutes
+Progress: 18.22%, loss: 0.5871862173080444, time spent: 11.18 minutes
+Progress: 18.75%, loss: 0.6044583916664124, time spent: 11.50 minutes
+Progress: 19.27%, loss: 0.5907379984855652, time spent: 11.82 minutes
+Progress: 19.79%, loss: 0.5834084749221802, time spent: 12.13 minutes
+Progress: 20.31%, loss: 0.5734983086585999, time spent: 12.45 minutes
+Progress: 20.83%, loss: 0.5953618288040161, time spent: 12.76 minutes
+Progress: 21.35%, loss: 0.6060634851455688, time spent: 13.07 minutes
+Progress: 21.87%, loss: 0.5829563140869141, time spent: 13.39 minutes
+Progress: 22.39%, loss: 0.579892635345459, time spent: 13.71 minutes
+Progress: 22.91%, loss: 0.6350804567337036, time spent: 14.02 minutes
+Progress: 23.43%, loss: 0.6355008482933044, time spent: 14.34 minutes
+Progress: 23.95%, loss: 0.6242951154708862, time spent: 14.66 minutes
+Progress: 24.47%, loss: 0.6018753051757812, time spent: 14.97 minutes
+Progress: 24.99%, loss: 0.5877872109413147, time spent: 15.29 minutes
+Progress: 25.51%, loss: 0.5958396792411804, time spent: 15.61 minutes
+Progress: 26.03%, loss: 0.5906972289085388, time spent: 15.92 minutes
+Progress: 26.56%, loss: 0.5795518755912781, time spent: 16.24 minutes
+Progress: 27.08%, loss: 0.5669254064559937, time spent: 16.56 minutes
+Progress: 27.60%, loss: 0.5929499268531799, time spent: 16.87 minutes
+Progress: 28.12%, loss: 0.5853201150894165, time spent: 17.19 minutes
+Progress: 28.64%, loss: 0.5847058892250061, time spent: 17.51 minutes
+Progress: 29.16%, loss: 0.5589799880981445, time spent: 17.82 minutes
+Progress: 29.68%, loss: 0.5880299210548401, time spent: 18.14 minutes
+Progress: 30.20%, loss: 0.6215604543685913, time spent: 18.46 minutes
+Progress: 30.72%, loss: 0.5995349884033203, time spent: 18.78 minutes
+Progress: 31.24%, loss: 0.5811631083488464, time spent: 19.10 minutes
+Progress: 31.76%, loss: 0.5717295408248901, time spent: 19.41 minutes
+Progress: 32.28%, loss: 0.5759162306785583, time spent: 19.73 minutes
+Progress: 32.80%, loss: 0.5807233452796936, time spent: 20.04 minutes
+Progress: 33.32%, loss: 0.5777589082717896, time spent: 20.36 minutes
+Progress: 33.85%, loss: 0.5871967077255249, time spent: 20.67 minutes
+Progress: 34.37%, loss: 0.5843203067779541, time spent: 20.98 minutes
+Progress: 34.89%, loss: 0.5711535811424255, time spent: 21.30 minutes
+Progress: 35.41%, loss: 0.5601339936256409, time spent: 21.62 minutes
+Progress: 35.93%, loss: 0.5813779830932617, time spent: 21.93 minutes
+Progress: 36.45%, loss: 0.5820435285568237, time spent: 22.25 minutes
+Progress: 36.97%, loss: 0.5780690908432007, time spent: 22.56 minutes
+Progress: 37.49%, loss: 0.5682697892189026, time spent: 22.89 minutes
+Progress: 38.01%, loss: 0.5623351335525513, time spent: 23.21 minutes
+Progress: 38.53%, loss: 0.5714082717895508, time spent: 23.54 minutes
+Progress: 39.05%, loss: 0.5752078294754028, time spent: 23.87 minutes
+Progress: 39.57%, loss: 0.5684472322463989, time spent: 24.20 minutes
+Progress: 40.09%, loss: 0.5754470229148865, time spent: 24.52 minutes
+Progress: 40.61%, loss: 0.5660011768341064, time spent: 24.85 minutes
+Progress: 41.14%, loss: 0.5766137838363647, time spent: 25.20 minutes
+Progress: 41.66%, loss: 0.5492241382598877, time spent: 25.53 minutes
+Progress: 42.18%, loss: 0.5647425055503845, time spent: 25.86 minutes
+Progress: 42.70%, loss: 0.558948278427124, time spent: 26.19 minutes
+Progress: 43.22%, loss: 0.5642784237861633, time spent: 26.51 minutes
+Progress: 43.74%, loss: 0.5632949471473694, time spent: 26.87 minutes
+Progress: 44.26%, loss: 0.5375370383262634, time spent: 27.19 minutes
+Progress: 44.78%, loss: 0.5687126517295837, time spent: 27.52 minutes
+Progress: 45.30%, loss: 0.5629432201385498, time spent: 27.85 minutes
+Progress: 45.82%, loss: 0.5654932856559753, time spent: 28.18 minutes
+Progress: 46.34%, loss: 0.5750062465667725, time spent: 28.51 minutes
+Progress: 46.86%, loss: 0.6253405213356018, time spent: 28.84 minutes
+Progress: 47.38%, loss: 0.5915959477424622, time spent: 29.18 minutes
+Progress: 47.90%, loss: 0.588165283203125, time spent: 29.51 minutes
+Progress: 48.42%, loss: 0.5779123306274414, time spent: 29.84 minutes
+Progress: 48.95%, loss: 0.5786310434341431, time spent: 30.17 minutes
+Progress: 49.47%, loss: 0.6064044833183289, time spent: 30.49 minutes
+Progress: 49.99%, loss: 0.5922541618347168, time spent: 30.82 minutes
+Progress: 50.51%, loss: 0.5764830708503723, time spent: 31.15 minutes
+Progress: 51.03%, loss: 0.5797560811042786, time spent: 31.48 minutes
+Progress: 51.55%, loss: 0.5849226713180542, time spent: 31.81 minutes
+Progress: 52.07%, loss: 0.5739541053771973, time spent: 32.15 minutes
+Progress: 52.59%, loss: 0.5773418545722961, time spent: 32.47 minutes
+Progress: 53.11%, loss: 0.5516027212142944, time spent: 32.80 minutes
+Progress: 53.63%, loss: 0.5726276636123657, time spent: 33.13 minutes
+Progress: 54.15%, loss: 0.5789769887924194, time spent: 33.46 minutes
+Progress: 54.67%, loss: 0.5610536932945251, time spent: 33.78 minutes
+Progress: 55.19%, loss: 0.5783467292785645, time spent: 34.11 minutes
+Progress: 55.71%, loss: 0.6102874279022217, time spent: 34.44 minutes
+Progress: 56.24%, loss: 0.572119951248169, time spent: 34.77 minutes
+Progress: 56.76%, loss: 0.5686162710189819, time spent: 35.10 minutes
+Progress: 57.28%, loss: 0.5666431188583374, time spent: 35.42 minutes
+Progress: 57.80%, loss: 0.5708598494529724, time spent: 35.75 minutes
+Progress: 58.32%, loss: 0.5670791864395142, time spent: 36.08 minutes
+Progress: 58.84%, loss: 0.5661935210227966, time spent: 36.41 minutes
+Progress: 59.36%, loss: 0.5317116379737854, time spent: 36.73 minutes
+Progress: 59.88%, loss: 0.5751525163650513, time spent: 37.06 minutes
+Progress: 60.40%, loss: 0.5811497569084167, time spent: 37.39 minutes
+Progress: 60.92%, loss: 0.5620996356010437, time spent: 37.72 minutes
+Progress: 61.44%, loss: 0.5639804601669312, time spent: 38.05 minutes
+Progress: 61.96%, loss: 0.5497695803642273, time spent: 38.37 minutes
+Progress: 62.48%, loss: 0.5470210313796997, time spent: 38.70 minutes
+Progress: 63.00%, loss: 0.5590048432350159, time spent: 39.03 minutes
+Progress: 63.53%, loss: 0.5456252694129944, time spent: 39.36 minutes
+Progress: 64.05%, loss: 0.5629295110702515, time spent: 39.68 minutes
+Progress: 64.57%, loss: 0.5561078786849976, time spent: 40.01 minutes
+Progress: 65.09%, loss: 0.5449861288070679, time spent: 40.34 minutes
+Progress: 65.61%, loss: 0.5452524423599243, time spent: 40.67 minutes
+Progress: 66.13%, loss: 0.5538936257362366, time spent: 41.00 minutes
+Progress: 66.65%, loss: 0.5607392191886902, time spent: 41.33 minutes
+Progress: 67.17%, loss: 0.5456511378288269, time spent: 41.66 minutes
+Progress: 67.69%, loss: 0.5333037376403809, time spent: 41.99 minutes
+Progress: 68.21%, loss: 0.5355610251426697, time spent: 42.31 minutes
+Progress: 68.73%, loss: 0.5488843321800232, time spent: 42.66 minutes
+Progress: 69.25%, loss: 0.5484362840652466, time spent: 42.99 minutes
+Progress: 69.77%, loss: 0.5419413447380066, time spent: 43.32 minutes
+Progress: 70.29%, loss: 0.5485054850578308, time spent: 43.65 minutes
+Progress: 70.81%, loss: 0.5505737662315369, time spent: 43.98 minutes
+Progress: 71.34%, loss: 0.5323092937469482, time spent: 44.30 minutes
+Progress: 71.86%, loss: 0.5456602573394775, time spent: 44.63 minutes
+Progress: 72.38%, loss: 0.5463199615478516, time spent: 44.96 minutes
+Progress: 72.90%, loss: 0.5505716800689697, time spent: 45.29 minutes
+Progress: 73.42%, loss: 0.5447856187820435, time spent: 45.62 minutes
+Progress: 73.94%, loss: 0.5492636561393738, time spent: 45.95 minutes
+Progress: 74.46%, loss: 0.513935923576355, time spent: 46.27 minutes
+Progress: 74.98%, loss: 0.5712569355964661, time spent: 46.60 minutes
+Progress: 75.50%, loss: 0.5593433976173401, time spent: 46.93 minutes
+Progress: 76.02%, loss: 0.6067715287208557, time spent: 47.26 minutes
+Progress: 76.54%, loss: 0.5410637855529785, time spent: 47.59 minutes
+Progress: 77.06%, loss: 0.5371958613395691, time spent: 47.92 minutes
+Progress: 77.58%, loss: 0.530645489692688, time spent: 48.24 minutes
+Progress: 78.10%, loss: 0.5308193564414978, time spent: 48.57 minutes
+Progress: 78.63%, loss: 0.539074182510376, time spent: 48.90 minutes
+Progress: 79.15%, loss: 0.5451122522354126, time spent: 49.23 minutes
+Progress: 79.67%, loss: 0.5390416383743286, time spent: 49.56 minutes
+Progress: 80.19%, loss: 0.5348243117332458, time spent: 49.89 minutes
+Progress: 80.71%, loss: 0.5261462926864624, time spent: 50.22 minutes
+Progress: 81.23%, loss: 0.5459225177764893, time spent: 50.54 minutes
+Progress: 81.75%, loss: 0.5674441456794739, time spent: 50.87 minutes
+Progress: 82.27%, loss: 0.5220900177955627, time spent: 51.19 minutes
+Progress: 82.79%, loss: 0.5258864164352417, time spent: 51.52 minutes
+Progress: 83.31%, loss: 0.5107598304748535, time spent: 51.84 minutes
+Progress: 83.83%, loss: 0.5472632646560669, time spent: 52.17 minutes
+Progress: 84.35%, loss: 0.5446628928184509, time spent: 52.49 minutes
+Progress: 84.87%, loss: 0.5228149890899658, time spent: 52.82 minutes
+Progress: 85.39%, loss: 0.5699939727783203, time spent: 53.15 minutes
+Progress: 85.92%, loss: 0.6350170969963074, time spent: 53.47 minutes
+Progress: 86.44%, loss: 0.6362411379814148, time spent: 53.80 minutes
+Progress: 86.96%, loss: 0.6132662892341614, time spent: 54.13 minutes
+Progress: 87.48%, loss: 0.6278670430183411, time spent: 54.45 minutes
+Progress: 88.00%, loss: 0.6293443441390991, time spent: 54.78 minutes
+Progress: 88.52%, loss: 0.6226544976234436, time spent: 55.11 minutes
+Progress: 89.04%, loss: 0.6162853240966797, time spent: 55.43 minutes
+Progress: 89.56%, loss: 0.606619656085968, time spent: 55.76 minutes
+Progress: 90.08%, loss: 0.6304928064346313, time spent: 56.08 minutes
+Progress: 90.60%, loss: 0.6298040151596069, time spent: 56.41 minutes
+Progress: 91.12%, loss: 0.6290401220321655, time spent: 56.74 minutes
+Progress: 91.64%, loss: 0.6174961924552917, time spent: 57.06 minutes
+Progress: 92.16%, loss: 0.614736020565033, time spent: 57.39 minutes
+Progress: 92.68%, loss: 0.6135315299034119, time spent: 57.72 minutes
+Progress: 93.20%, loss: 0.6131395101547241, time spent: 58.04 minutes
+Progress: 93.73%, loss: 0.6050432324409485, time spent: 58.37 minutes
+Progress: 94.25%, loss: 0.6154412627220154, time spent: 58.69 minutes
+Progress: 94.77%, loss: 0.6152880191802979, time spent: 59.02 minutes
+Progress: 95.29%, loss: 0.6174352169036865, time spent: 59.34 minutes
+Progress: 95.81%, loss: 0.5950657725334167, time spent: 59.67 minutes
+Progress: 96.33%, loss: 0.6209539175033569, time spent: 59.99 minutes
+Progress: 96.85%, loss: 0.6257545948028564, time spent: 60.32 minutes
+Progress: 97.37%, loss: 0.6066023111343384, time spent: 60.64 minutes
+Progress: 97.89%, loss: 0.5792033076286316, time spent: 60.97 minutes
+Progress: 98.41%, loss: 0.5801551342010498, time spent: 61.30 minutes
+Progress: 98.93%, loss: 0.5989113450050354, time spent: 61.62 minutes
+Progress: 99.45%, loss: 0.6094762086868286, time spent: 61.95 minutes
+Progress: 99.97%, loss: 0.6020125150680542, time spent: 62.27 minutes
+Finish training, time spent: 62.28 minutes
+Start testing
+test acc: 0.6543310288735258
