@@ -309,3 +309,43 @@ Progress: 99.97%, loss: 0.6020125150680542, time spent: 62.27 minutes
 Finish training, time spent: 62.28 minutes
 Start testing
 test acc: 0.6543310288735258
+Using device: cuda
+loading v_enc_dim300
+loading v_freq_freq
+loading v_deg
+loading v_sense
+loading e_vertexsim
+loading e_dir
+loading e_rel
+loading e_weightsource
+loading e_srank_rel
+loading e_trank_rel
+loading e_sense
+loading problem plain texts
+loading labeled pairs
+Config: feature_enc_len:100, path_enc_type:Attention, N:1024, n_epoch:200
+defining architecture
+Start training
+Progress: 0.00%, loss: 0.6998781561851501, time spent: 0.04 minutes
+Progress: 5.21%, loss: 0.6717631220817566, time spent: 0.94 minutes
+Progress: 10.42%, loss: 0.6413816809654236, time spent: 1.80 minutes
+Progress: 15.62%, loss: 0.6212460398674011, time spent: 2.64 minutes
+Progress: 20.83%, loss: 0.6020692586898804, time spent: 3.54 minutes
+Progress: 26.04%, loss: 0.5909582376480103, time spent: 4.40 minutes
+Progress: 31.25%, loss: 0.6027395725250244, time spent: 5.34 minutes
+Progress: 36.46%, loss: 0.5788805484771729, time spent: 6.22 minutes
+Progress: 41.67%, loss: 0.6111623644828796, time spent: 7.11 minutes
+Progress: 46.88%, loss: 0.5791245698928833, time spent: 8.00 minutes
+Progress: 52.08%, loss: 0.5510919094085693, time spent: 8.87 minutes
+Progress: 57.29%, loss: 0.5690831542015076, time spent: 9.71 minutes
+Progress: 62.50%, loss: 0.5537922382354736, time spent: 10.58 minutes
+Progress: 67.71%, loss: 0.5680983662605286, time spent: 11.50 minutes
+Progress: 72.92%, loss: 0.5277004837989807, time spent: 12.37 minutes
+Progress: 78.12%, loss: 0.534243106842041, time spent: 13.26 minutes
+Progress: 83.33%, loss: 0.5154958367347717, time spent: 14.14 minutes
+Progress: 88.54%, loss: 0.5282634496688843, time spent: 15.04 minutes
+Progress: 93.75%, loss: 0.512785017490387, time spent: 15.91 minutes
+Progress: 98.96%, loss: 0.5261678099632263, time spent: 16.75 minutes
+Finish training, time spent: 16.90 minutes
+Start testing
+test acc: 0.6596177307848718

@@ -7,6 +7,8 @@ from torch import nn
 from torch.autograd import Variable
 from torch.nn.functional import relu
 
+from transformer import TransformerEncoderLayer, TransformerEncoder, PositionalEncoding
+
 
 class FeatureTransformer(nn.Module):
     '''
@@ -24,28 +26,6 @@ class FeatureTransformer(nn.Module):
 
     def forward(self, input):
         return relu(self.linear(input))
-
-class PositionalEncoding(nn.Module):
-
-    def __init__(self, d_model: int, dropout: float = 0.1, max_len: int = 5000):
-        super().__init__()
-        self.dropout = nn.Dropout(p=dropout)
-
-        position = torch.arange(max_len).unsqueeze(1)
-        div_term = torch.exp(torch.arange(0, d_model, 2) * (-math.log(10000.0) / d_model))
-        pe = torch.zeros(max_len, 1, d_model)
-        pe[:, 0, 0::2] = torch.sin(position * div_term)
-        pe[:, 0, 1::2] = torch.cos(position * div_term)
-        self.register_buffer('pe', pe)
-
-    def forward(self, x: torch.Tensor) -> torch.Tensor:
-        """
-        Args:
-            x: Tensor, shape [seq_len, batch_size, embedding_dim]
-        """
-        x = x + self.pe[:x.size(0)]
-        return self.dropout(x)
-
 
 class ChainEncoder(nn.Module):
     '''
@@ -87,15 +67,15 @@ class ChainEncoder(nn.Module):
                                 hidden_size=out_length, num_layers=num_layers)
         elif self.path_encoder_type == 'Attention':
             self.position_encoder = PositionalEncoding(d_model=out_length, dropout=0.1)
-            encoder_layer = nn.TransformerEncoderLayer(d_model=out_length, nhead=4, dim_feedforward=256, dropout=0.1)
-            self.transformer_encoder = nn.TransformerEncoder(encoder_layer, num_layers=2)
+            encoder_layer = TransformerEncoderLayer(d_model=out_length, nhead=4, dim_feedforward=256, dropout=0.1)
+            self.transformer_encoder = TransformerEncoder(encoder_layer, num_layers=2)
 
     def _generate_square_subsequent_mask(self, sz):
         mask = (torch.triu(torch.ones(sz, sz)) == 1).transpose(0, 1)
         mask = mask.float().masked_fill(mask == 0, float('-inf')).masked_fill(mask == 1, float(0.0))
         return mask
 
-    def forward(self, input):
+    def forward(self, input, return_attention=False):
         '''
         input is a list of v_features, and e_features
         v_features is a list of num_vertices tuples
@@ -163,12 +143,20 @@ class ChainEncoder(nn.Module):
             output, (hidden, cell) = self.lstm(combined_encs)
         elif self.path_encoder_type == 'Attention':
             output = self.position_encoder(combined_encs)
-            output = self.transformer_encoder(output)
+            if return_attention:
+                output, attentions = self.transformer_encoder.forward(output, return_attention=True)
+            else:
+                output = self.transformer_encoder(output)
 
         if self.pooling == 'last':
-            return output[-1]
+            output = output[-1]
         else:
-            return torch.mean(output, dim=0)
+            output = torch.mean(output, dim=0)
+
+        if return_attention:
+            return output, attentions
+        else:
+            return output
 
 
 class Predictor(nn.Module):

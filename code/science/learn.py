@@ -12,7 +12,7 @@ from dataset import Dataset
 from multiprocessing import Pool
 import time
 from datetime import datetime
-
+import pickle
 
 def train(dataset, fea_len, num_iter=4000, N=1000, path_enc_type="LSTM", out_file='train.log'):
     if isinstance(out_file, str):
@@ -110,3 +110,18 @@ print(f"Config: feature_enc_len:{feature_enc_len}, path_enc_type:{path_enc_type}
 
 encoder, predictor, loss = train(dataset, feature_enc_len, num_iter, N, path_enc_type)
 test(dataset, encoder, predictor, loss)
+
+
+################ Try plotting the attention heatmap ################################
+
+chains_A, chains_B, y = dataset.get_test_pairs(randomize_dir=True, return_id=False)
+embed_A, att_A = encoder.forward(chains_A, return_attention=True)
+embed_B, att_B = encoder.forward(chains_B, return_attention=True)
+
+sample_i = 0
+att_A = [torch.squeeze(att[sample_i]).cpu().detach().numpy() for att in att_A]  # remove batch dim
+att_B = [torch.squeeze(att[sample_i]).cpu().detach().numpy() for att in att_B]
+with open("att_A.pkl", "wb") as f:
+    pickle.dump(att_A, f)
+with open("att_B.pkl", "wb") as f:
+    pickle.dump(att_B, f)
