@@ -107,17 +107,17 @@ class Dataset:
         v_features = [[], [], [], []]
         e_features = [[], [], []]
 
-        for feature in v_features:
+        for vertex in v_features:
             for f in self.feature_names:
                 if f.startswith('v'):
-                    feature.append(
+                    vertex.append(
                         np.zeros((N, all_feature_lengths[f]), dtype='float32')
                     )
 
-        for feature in e_features:
+        for edge in e_features:
             for f in self.feature_names:
                 if f.startswith('e'):
-                    feature.append(
+                    edge.append(
                         np.zeros((N, all_feature_lengths[f]), dtype='float32')
                     )
 
