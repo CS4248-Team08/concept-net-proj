@@ -20,6 +20,7 @@ all_feature_lengths = {'v_enc_onehot': 100,
                        'v_freq_rank': 1,
                        'v_deg': 1,
                        'v_sense': 1,
+                       'v_kg_embed50': 200,
                        'e_vertexsim': 1,
                        'e_dir': 3,
                        'e_rel': 46,
@@ -152,6 +153,8 @@ class Dataset:
                         v_features_A[v_idx][v_fea_idx][instance_idx] = v_good[v_idx][v_fea_idx]
                         v_features_B[v_idx][v_fea_idx][instance_idx] = v_bad[v_idx][v_fea_idx]
                     else:
+                        # print(v_features_B[v_idx][v_fea_idx][instance_idx])
+                        # print(v_good[v_idx][v_fea_idx])
                         v_features_B[v_idx][v_fea_idx][instance_idx] = v_good[v_idx][v_fea_idx]
                         v_features_A[v_idx][v_fea_idx][instance_idx] = v_bad[v_idx][v_fea_idx]
 

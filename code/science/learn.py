@@ -92,7 +92,7 @@ use_gpu = True
 device = "cuda" if use_gpu and torch.cuda.is_available() else "cpu"
 print(f"Using device: {device}")
 
-features = ['v_enc_dim300', 'v_freq_freq', 'v_deg', 'v_sense', 'e_vertexsim',
+features = ['v_kg_embed50', 'v_enc_dim300', 'v_freq_freq', 'v_deg', 'v_sense', 'e_vertexsim',
             'e_dir', 'e_rel', 'e_weightsource', 'e_srank_rel', 'e_trank_rel', 'e_sense']
 feature_len = 20
 split_frac = 0.8
