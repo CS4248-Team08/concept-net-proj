@@ -349,3 +349,43 @@ Progress: 98.96%, loss: 0.5261678099632263, time spent: 16.75 minutes
 Finish training, time spent: 16.90 minutes
 Start testing
 test acc: 0.6596177307848718
+Using device: cuda
+loading v_enc_dim300
+loading v_freq_freq
+loading v_deg
+loading v_sense
+loading e_vertexsim
+loading e_dir
+loading e_rel
+loading e_weightsource
+loading e_srank_rel
+loading e_trank_rel
+loading e_sense
+loading problem plain texts
+loading labeled pairs
+Config: feature_enc_len:100, path_enc_type:RNN, N:1024, n_epoch:200
+defining architecture
+Start training
+Progress: 0.00%, loss: 0.8596802353858948, time spent: 0.00 minutes
+Progress: 5.21%, loss: 0.643745481967926, time spent: 0.33 minutes
+Progress: 10.42%, loss: 0.6264887452125549, time spent: 0.67 minutes
+Progress: 15.62%, loss: 0.6127312183380127, time spent: 1.05 minutes
+Progress: 20.83%, loss: 0.6254662871360779, time spent: 1.38 minutes
+Progress: 26.04%, loss: 0.629048228263855, time spent: 1.71 minutes
+Progress: 31.25%, loss: 0.6278573870658875, time spent: 2.03 minutes
+Progress: 36.46%, loss: 0.6229093074798584, time spent: 2.36 minutes
+Progress: 41.67%, loss: 0.6195389032363892, time spent: 2.69 minutes
+Progress: 46.88%, loss: 0.6124435663223267, time spent: 3.01 minutes
+Progress: 52.08%, loss: 0.6184097528457642, time spent: 3.34 minutes
+Progress: 57.29%, loss: 0.6127491593360901, time spent: 3.67 minutes
+Progress: 62.50%, loss: 0.6234113574028015, time spent: 3.99 minutes
+Progress: 67.71%, loss: 0.6143685579299927, time spent: 4.57 minutes
+Progress: 72.92%, loss: 0.6054749488830566, time spent: 4.90 minutes
+Progress: 78.12%, loss: 0.5867217183113098, time spent: 5.22 minutes
+Progress: 83.33%, loss: 0.6005939841270447, time spent: 5.55 minutes
+Progress: 88.54%, loss: 0.6192638278007507, time spent: 5.87 minutes
+Progress: 93.75%, loss: 0.6003380417823792, time spent: 6.19 minutes
+Progress: 98.96%, loss: 0.601384162902832, time spent: 6.52 minutes
+Finish training, time spent: 6.58 minutes
+Start testing
+test acc: 0.6482309882065881

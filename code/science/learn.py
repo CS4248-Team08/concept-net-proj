@@ -13,10 +13,12 @@ from multiprocessing import Pool
 import time
 from datetime import datetime
 import pickle
+from sklearn.metrics import f1_score, recall_score, precision_score
 
 def train(dataset, fea_len, num_iter=4000, N=1000, path_enc_type="LSTM", out_file='train.log'):
     if isinstance(out_file, str):
         out_file = open(out_file, 'w')
+    out_file.write("n_iter,loss\n")
 
     print('defining architecture')
     encoder = ChainEncoder(dataset.get_v_fea_len(),
@@ -53,7 +55,7 @@ def train(dataset, fea_len, num_iter=4000, N=1000, path_enc_type="LSTM", out_fil
             print(
                 f"Progress: {100*train_iter/num_iter:.2f}%, loss: {loss_val.item()}, time spent: {(time.time() - start)/60:.2f} minutes")
 
-            out_file.write(f"{train_iter}, loss: {loss_val.item()}\n")
+            out_file.write(f"{train_iter}, {loss_val.item()}\n")
             torch.save(encoder.state_dict(),
                        f'ckpt/{train_iter}_encoder.model')
             torch.save(predictor.state_dict(),
@@ -82,11 +84,14 @@ def test(dataset, encoder, predictor, loss, out_file='test.log'):
         y = y.to(device='cpu').numpy()
 
         cur_acc = (pred == y).sum() / len(y)
+        recall = recall_score(y, pred)
+        precision = precision_score(y, pred)
+        f1 = f1_score(y, pred)
 
-        print(f'test acc: {cur_acc}')
+        print(f'Test accuracy: {cur_acc}, recall: {recall}, precision: {precision}, f1: {f1}')
         out_file.write("Test time: {}\n".format(datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
         out_file.write(f"Test config: feature_enc_len:{feature_enc_len}, path_enc_type:{path_enc_type}, N:{N}, epoch:{num_epoch}\n")
-        out_file.write(f'Test accuracy: {cur_acc}\n\n')
+        out_file.write(f'Test accuracy: {cur_acc}, recall: {recall}, precision: {precision}, f1: {f1}\n\n')
 
     out_file.close()
 
@@ -101,11 +106,11 @@ features = ['v_enc_dim300', 'v_freq_freq', 'v_deg', 'v_sense', 'e_vertexsim',
 split_frac = 0.8
 dataset = Dataset(features, split_frac, device)
 
-feature_enc_len = 100
-num_epoch = 200
+feature_enc_len = 20
+num_epoch = 300
 N = 1024  # batch size
 num_iter = num_epoch * dataset.train_size//N
-path_enc_type = "Attention"
+path_enc_type = "LSTM"
 print(f"Config: feature_enc_len:{feature_enc_len}, path_enc_type:{path_enc_type}, N:{N}, n_epoch:{num_epoch}")
 
 encoder, predictor, loss = train(dataset, feature_enc_len, num_iter, N, path_enc_type)
@@ -114,14 +119,14 @@ test(dataset, encoder, predictor, loss)
 
 ################ Try plotting the attention heatmap ################################
 
-chains_A, chains_B, y = dataset.get_test_pairs(randomize_dir=True, return_id=False)
-embed_A, att_A = encoder.forward(chains_A, return_attention=True)
-embed_B, att_B = encoder.forward(chains_B, return_attention=True)
+# chains_A, chains_B, y = dataset.get_test_pairs(randomize_dir=True, return_id=False)
+# embed_A, att_A = encoder.forward(chains_A, return_attention=True)
+# embed_B, att_B = encoder.forward(chains_B, return_attention=True)
 
-sample_i = 0
-att_A = [torch.squeeze(att[sample_i]).cpu().detach().numpy() for att in att_A]  # remove batch dim
-att_B = [torch.squeeze(att[sample_i]).cpu().detach().numpy() for att in att_B]
-with open("att_A.pkl", "wb") as f:
-    pickle.dump(att_A, f)
-with open("att_B.pkl", "wb") as f:
-    pickle.dump(att_B, f)
+# sample_i = 0
+# att_A = [torch.squeeze(att[sample_i]).cpu().detach().numpy() for att in att_A]  # remove batch dim
+# att_B = [torch.squeeze(att[sample_i]).cpu().detach().numpy() for att in att_B]
+# with open("att_A.pkl", "wb") as f:
+#     pickle.dump(att_A, f)
+# with open("att_B.pkl", "wb") as f:
+#     pickle.dump(att_B, f)
