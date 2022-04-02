@@ -15,7 +15,7 @@ from datetime import datetime
 import pickle
 from sklearn.metrics import f1_score, recall_score, precision_score
 
-def train(dataset, fea_len, num_iter=4000, N=1000, path_enc_type="LSTM", feature_enc_type='proj+mean', out_file='train.log'):
+def train(dataset, fea_len, num_iter=4000, N=1000, device='cuda', path_enc_type="LSTM", feature_enc_type='proj+mean', out_file='train.log'):
     if isinstance(out_file, str):
         out_file = open(out_file, 'w')
     out_file.write("n_iter,loss\n")
@@ -67,9 +67,12 @@ def train(dataset, fea_len, num_iter=4000, N=1000, path_enc_type="LSTM", feature
     return encoder, predictor, loss
 
 
-def test(dataset, encoder, predictor, loss, out_file='test.log'):
+def test(dataset, encoder, predictor, loss, config=None, out_file='test.log'):
     if isinstance(out_file, str):
         out_file = open(out_file, 'a')
+        
+    if config:
+        feature_enc_len, feature_enc_type, path_enc_type, N, num_epoch = config
 
     print("Start testing")
     chains_A, chains_B, y = dataset.get_test_pairs(randomize_dir=True, return_id=False)
@@ -91,44 +94,7 @@ def test(dataset, encoder, predictor, loss, out_file='test.log'):
 
         print(f'Test accuracy: {cur_acc}, recall: {recall}, precision: {precision}, f1: {f1}')
         out_file.write("Test time: {}\n".format(datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
-        out_file.write(f"Test config: feature_enc_len:{feature_enc_len}, path_enc_type:{path_enc_type}, N:{N}, epoch:{num_epoch}\n")
+        out_file.write(f"Test config: feature_enc_len:{feature_enc_len}, feature_enc_type:{feature_enc_type}, path_enc_type:{path_enc_type}, N:{N}, epoch:{num_epoch}\n")
         out_file.write(f'Test accuracy: {cur_acc}, recall: {recall}, precision: {precision}, f1: {f1}\n\n')
 
     out_file.close()
-
-
-# torch.autograd.set_detect_anomaly(True)
-use_gpu = True
-device = "cuda" if use_gpu and torch.cuda.is_available() else "cpu"
-print(f"Using device: {device}")
-
-features = ['v_enc_dim300', 'v_freq_freq', 'v_deg', 'v_sense', 'e_vertexsim',
-            'e_dir', 'e_rel', 'e_weightsource', 'e_srank_rel', 'e_trank_rel', 'e_sense']
-split_frac = 0.8
-dataset = Dataset(features, split_frac, device)
-
-feature_enc_len = 20
-num_epoch = 300
-N = 1024  # batch size
-num_iter = num_epoch * dataset.train_size//N
-path_enc_type = "LSTM"  # 'RNN' OR 'LSTM' OR 'Attention'
-feature_enc_type = 'proj+mean'  # 'proj+mean' OR 'concat+proj'
-print(f"Config: feature_enc_len:{feature_enc_len}, path_enc_type:{path_enc_type}, N:{N}, n_epoch:{num_epoch}")
-
-encoder, predictor, loss = train(dataset, feature_enc_len, num_iter, N, path_enc_type, feature_enc_type)
-test(dataset, encoder, predictor, loss)
-
-
-################ Try plotting the attention heatmap ################################
-
-# chains_A, chains_B, y = dataset.get_test_pairs(randomize_dir=True, return_id=False)
-# embed_A, att_A = encoder.forward(chains_A, return_attention=True)
-# embed_B, att_B = encoder.forward(chains_B, return_attention=True)
-
-# sample_i = 0
-# att_A = [torch.squeeze(att[sample_i]).cpu().detach().numpy() for att in att_A]  # remove batch dim
-# att_B = [torch.squeeze(att[sample_i]).cpu().detach().numpy() for att in att_B]
-# with open("att_A.pkl", "wb") as f:
-#     pickle.dump(att_A, f)
-# with open("att_B.pkl", "wb") as f:
-#     pickle.dump(att_B, f)
