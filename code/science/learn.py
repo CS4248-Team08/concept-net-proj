@@ -15,15 +15,16 @@ from datetime import datetime
 import pickle
 from sklearn.metrics import f1_score, recall_score, precision_score
 
-def train(dataset, fea_len, num_iter=4000, N=1000, path_enc_type="LSTM", out_file='train.log'):
+def train(dataset, fea_len, num_iter=4000, N=1000, path_enc_type="LSTM", feature_enc_type='proj+mean', out_file='train.log'):
     if isinstance(out_file, str):
         out_file = open(out_file, 'w')
     out_file.write("n_iter,loss\n")
 
     print('defining architecture')
     encoder = ChainEncoder(dataset.get_v_fea_len(),
-                           dataset.get_e_fea_len(), 
-                           out_length=fea_len, pooling='mean', path_encoder_type=path_enc_type)
+                           dataset.get_e_fea_len(),
+                           out_length=fea_len, pooling='mean',
+                           path_encode_type=path_enc_type, feature_encode_type=feature_enc_type)
     predictor = Predictor(fea_len)
     # model = JointModel(dataset.get_v_fea_len(), dataset.get_e_fea_len(), fea_len, 'last')
     loss = nn.NLLLoss()
@@ -96,7 +97,7 @@ def test(dataset, encoder, predictor, loss, out_file='test.log'):
     out_file.close()
 
 
-#torch.autograd.set_detect_anomaly(True)
+# torch.autograd.set_detect_anomaly(True)
 use_gpu = True
 device = "cuda" if use_gpu and torch.cuda.is_available() else "cpu"
 print(f"Using device: {device}")
@@ -110,10 +111,11 @@ feature_enc_len = 20
 num_epoch = 300
 N = 1024  # batch size
 num_iter = num_epoch * dataset.train_size//N
-path_enc_type = "LSTM"
+path_enc_type = "LSTM"  # 'RNN' OR 'LSTM' OR 'Attention'
+feature_enc_type = 'proj+mean'  # 'proj+mean' OR 'concat+proj'
 print(f"Config: feature_enc_len:{feature_enc_len}, path_enc_type:{path_enc_type}, N:{N}, n_epoch:{num_epoch}")
 
-encoder, predictor, loss = train(dataset, feature_enc_len, num_iter, N, path_enc_type)
+encoder, predictor, loss = train(dataset, feature_enc_len, num_iter, N, path_enc_type, feature_enc_type)
 test(dataset, encoder, predictor, loss)
 
 

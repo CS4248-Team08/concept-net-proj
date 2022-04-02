@@ -33,39 +33,42 @@ class ChainEncoder(nn.Module):
     assumes that each of the chains are of the same length
     '''
 
-    def __init__(self, v_feature_lengths, e_feature_lengths, out_length, pooling, path_encoder_type='LSTM'):
+    def __init__(self, v_feature_lengths, e_feature_lengths, out_length, pooling, path_encode_type='LSTM', feature_encode_type='proj+mean'):
         super(ChainEncoder, self).__init__()
         self.out_length = feature_enc_length = out_length
         num_layers = 1
-        self.path_encoder_type = path_encoder_type
+        self.path_encode_type = path_encode_type
         self.pooling = pooling
         self.v_feature_lengths = v_feature_lengths
         self.e_feature_lengths = e_feature_lengths
+        self.feature_encode_type = feature_encode_type
 
-        # self.v_feature_encoders = nn.ModuleList()
-        # self.e_feature_encoders = nn.ModuleList()
-        # for d_in in self.v_feature_lengths:
-        #     self.v_feature_encoders.append(
-        #         FeatureTransformer(d_in, feature_enc_length))
-        # for d_in in self.e_feature_lengths:
-        #     self.e_feature_encoders.append(
-        #         FeatureTransformer(d_in, feature_enc_length))
+        # select between {'proj+mean', 'concat+proj'}
+        if feature_encode_type == "proj+mean":
+            self.v_feature_encoders = nn.ModuleList()
+            self.e_feature_encoders = nn.ModuleList()
+            for d_in in self.v_feature_lengths:
+                self.v_feature_encoders.append(
+                    FeatureTransformer(d_in, feature_enc_length))
+            for d_in in self.e_feature_lengths:
+                self.e_feature_encoders.append(
+                    FeatureTransformer(d_in, feature_enc_length))
 
-        ############### Try to concat all features in one vertex/edge and then use MLP to reduce dim ##################################
-        d_v = sum(self.v_feature_lengths)
-        d_e = sum(self.e_feature_lengths)
-        self.v_feature_encoder = nn.Linear(d_v, feature_enc_length)
-        self.e_feature_encoder = nn.Linear(d_e, feature_enc_length)
+        elif feature_encode_type == "concat+proj":
+            d_v = sum(self.v_feature_lengths)
+            d_e = sum(self.e_feature_lengths)
+            self.v_feature_encoder = nn.Linear(d_v, feature_enc_length)
+            self.e_feature_encoder = nn.Linear(d_e, feature_enc_length)
 
 
         # RNN famlity layer: input (seq_len, batch_size, d_in), output (seq_len, batch_size, d_out * D) where D=2 for bidirectional, D=1 otherwise
-        if self.path_encoder_type == 'RNN':
+        if self.path_encode_type == 'RNN':
             self.rnn = nn.RNN(input_size=feature_enc_length,
                               hidden_size=out_length, num_layers=num_layers)
-        elif self.path_encoder_type == 'LSTM':
+        elif self.path_encode_type == 'LSTM':
             self.lstm = nn.LSTM(input_size=feature_enc_length,
                                 hidden_size=out_length, num_layers=num_layers)
-        elif self.path_encoder_type == 'Attention':
+        elif self.path_encode_type == 'Attention':
             self.position_encoder = PositionalEncoding(d_model=out_length, dropout=0.1)
             encoder_layer = TransformerEncoderLayer(d_model=out_length, nhead=4, dim_feedforward=256, dropout=0.1)
             self.transformer_encoder = TransformerEncoder(encoder_layer, num_layers=2)
@@ -86,41 +89,43 @@ class ChainEncoder(nn.Module):
         # v_features.shape == (num_vertices, batch_size, variable feature_len)
         # e_features.shape == (num_edges, batch_size, variable feature_len)
 
-        # v_encodes = []
-        # for i in range(len(v_features)):  # 4 vertices
-        #     v_enc = None
-        #     for j in range(len(v_features[i])):  # feature in each vertex
-        #         curr_encoder = self.v_feature_encoders[j]
-        #         if v_enc is None:
-        #             v_enc = curr_encoder(v_features[i][j])
-        #         else:
-        #             v_enc = v_enc + curr_encoder(v_features[i][j])
-        #     # each feature encode is of shape (batch_size, out_length)
-        #     v_enc = v_enc / len(v_features[i])
-        #     v_encodes.append(v_enc)
-
-        # e_encodes = []
-        # for i in range(len(e_features)):  # 3 edges
-        #     e_enc = None
-        #     for j in range(len(e_features[i])):
-        #         curr_encoder = self.e_feature_encoders[j]
-        #         if e_enc is None:
-        #             e_enc = curr_encoder(e_features[i][j])
-        #         else:
-        #             e_enc = e_enc + curr_encoder(e_features[i][j])
-        #     e_enc = e_enc / len(e_features[i])
-        #     e_encodes.append(e_enc)
         v_encodes = []
-        for i in range(len(v_features)):  # 4 vertices
-            input = torch.cat(v_features[i], dim=1)
-            v_enc = self.v_feature_encoder(input)
-            v_encodes.append(v_enc)
-        
         e_encodes = []
-        for i in range(len(e_features)):  # 3 edges
-            input = torch.cat(e_features[i], dim=1)
-            e_enc = self.e_feature_encoder(input)
-            e_encodes.append(e_enc)
+        if self.feature_encode_type == 'proj+mean':
+            for i in range(len(v_features)):  # 4 vertices
+                v_enc = None
+                for j in range(len(v_features[i])):  # feature in each vertex
+                    curr_encoder = self.v_feature_encoders[j]
+                    if v_enc is None:
+                        v_enc = curr_encoder(v_features[i][j])
+                    else:
+                        v_enc = v_enc + curr_encoder(v_features[i][j])
+                # each feature encode is of shape (batch_size, out_length)
+                v_enc = v_enc / len(v_features[i])
+                v_encodes.append(v_enc)
+
+            for i in range(len(e_features)):  # 3 edges
+                e_enc = None
+                for j in range(len(e_features[i])):
+                    curr_encoder = self.e_feature_encoders[j]
+                    if e_enc is None:
+                        e_enc = curr_encoder(e_features[i][j])
+                    else:
+                        e_enc = e_enc + curr_encoder(e_features[i][j])
+                e_enc = e_enc / len(e_features[i])
+                e_encodes.append(e_enc)
+
+        elif self.feature_encode_type == 'concat+proj':
+            for i in range(len(v_features)):  # 4 vertices
+                input = torch.cat(v_features[i], dim=1)
+                v_enc = self.v_feature_encoder(input)
+                v_encodes.append(v_enc)
+
+            for i in range(len(e_features)):  # 3 edges
+                input = torch.cat(e_features[i], dim=1)
+                e_enc = self.e_feature_encoder(input)
+                e_encodes.append(e_enc)
+
 
         #combined_encs = [0] * (len(v_encodes)+len(e_encodes))
         combined_encs = []
@@ -137,11 +142,11 @@ class ChainEncoder(nn.Module):
         # combined_encs[1::2] = e_encodes
         # combined_encs = torch.stack(combined_encs, dim=0).detach().clone()
 
-        if self.path_encoder_type == 'RNN':
+        if self.path_encode_type == 'RNN':
             output, hidden = self.rnn(combined_encs)
-        elif self.path_encoder_type == 'LSTM':
+        elif self.path_encode_type == 'LSTM':
             output, (hidden, cell) = self.lstm(combined_encs)
-        elif self.path_encoder_type == 'Attention':
+        elif self.path_encode_type == 'Attention':
             output = self.position_encoder(combined_encs)
             if return_attention:
                 output, attentions = self.transformer_encoder.forward(output, return_attention=True)
