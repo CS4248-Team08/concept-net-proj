@@ -18,7 +18,7 @@ from sklearn.metrics import f1_score, recall_score, precision_score
 def train(dataset, fea_len, num_iter=4000, N=1000, device='cuda', path_enc_type="LSTM", feature_enc_type='proj+mean', out_file='train.log'):
     if isinstance(out_file, str):
         out_file = open(out_file, 'w')
-    out_file.write("n_iter,loss\n")
+    out_file.write("epoch,loss\n")
 
     print('defining architecture')
     encoder = ChainEncoder(dataset.get_v_fea_len(),
@@ -37,10 +37,11 @@ def train(dataset, fea_len, num_iter=4000, N=1000, device='cuda', path_enc_type=
     optimizer = optim.Adam(list(encoder.parameters()) +
                            list(predictor.parameters()))
     # optimizer = optim.Adam(model.parameters())
-
+    iters_per_epoch = dataset.train_size // N
     print('Start training')
     start = time.time()
     encoder.train()
+    epoch_loss = 0
     for train_iter in range(num_iter):
         chains_A, chains_B, y = dataset.get_train_pairs(N)
         output_A = encoder(chains_A)
@@ -51,12 +52,14 @@ def train(dataset, fea_len, num_iter=4000, N=1000, device='cuda', path_enc_type=
         loss_val = loss(logSoftmax_output, y)
         loss_val.backward()
         optimizer.step()
+        epoch_loss += loss_val.item()
 
-        if train_iter % 100 == 0:
+        if train_iter > 0 and (train_iter+1) % iters_per_epoch == 0:
             print(
-                f"Progress: {100*train_iter/num_iter:.2f}%, loss: {loss_val.item()}, time spent: {(time.time() - start)/60:.2f} minutes")
+                f"Progress: {100*train_iter/num_iter:.2f}%, loss: {epoch_loss}, time spent: {(time.time() - start)/60:.2f} minutes")
 
-            out_file.write(f"{train_iter}, {loss_val.item()}\n")
+            out_file.write(f"{train_iter//iters_per_epoch}, {epoch_loss}\n")
+            epoch_loss = 0
             torch.save(encoder.state_dict(),
                        f'ckpt/{train_iter}_encoder.model')
             torch.save(predictor.state_dict(),
