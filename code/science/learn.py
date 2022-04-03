@@ -15,7 +15,7 @@ from datetime import datetime
 import pickle
 from sklearn.metrics import f1_score, recall_score, precision_score
 
-def train(dataset, fea_len, num_iter=4000, N=1000, device='cuda', path_enc_type="LSTM", feature_enc_type='proj+mean', out_file='train.log'):
+def train(dataset, fea_len, num_iter=4000, N=1000, learning_rate=0.001, device='cuda', path_enc_type="LSTM", feature_enc_type='proj+mean', out_file='train.log'):
     if isinstance(out_file, str):
         out_file = open(out_file, 'w')
     out_file.write("epoch,loss\n")
@@ -35,7 +35,7 @@ def train(dataset, fea_len, num_iter=4000, N=1000, device='cuda', path_enc_type=
     loss.to(device=device)
 
     optimizer = optim.Adam(list(encoder.parameters()) +
-                           list(predictor.parameters()))
+                           list(predictor.parameters()), lr=learning_rate)
     # optimizer = optim.Adam(model.parameters())
     iters_per_epoch = dataset.train_size // N
     print('Start training')
