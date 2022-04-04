@@ -132,9 +132,9 @@ class Dataset:
         currently only keeping chains of length 4
         if for i-th problem, the good chain is in X_A, then y[i]==1, else y[i]==0
         '''
-        v_features_A, e_features_A = self.prepare_feature_placeholder(N)
-        v_features_B, e_features_B = self.prepare_feature_placeholder(N)
-        y = np.zeros(N, dtype='int64')
+        v_features_A, e_features_A = self.prepare_feature_placeholder(2*N)
+        v_features_B, e_features_B = self.prepare_feature_placeholder(2*N)
+        y = np.zeros(2*N, dtype='int64')
 
         for instance_idx in range(N):
             good, bad = next(self.cycled_train_pairs)
@@ -145,24 +145,23 @@ class Dataset:
             v_bad, e_bad = self.get_features(bad)
 
             label = random.random() > 0.5
-            y[instance_idx] = label
+            y[2 * instance_idx] = True
+            y[2 * instance_idx + 1] = False
             for v_idx in range(4):
                 for v_fea_idx in range(len(v_good[v_idx])):
-                    if label:
-                        v_features_A[v_idx][v_fea_idx][instance_idx] = v_good[v_idx][v_fea_idx]
-                        v_features_B[v_idx][v_fea_idx][instance_idx] = v_bad[v_idx][v_fea_idx]
-                    else:
-                        v_features_B[v_idx][v_fea_idx][instance_idx] = v_good[v_idx][v_fea_idx]
-                        v_features_A[v_idx][v_fea_idx][instance_idx] = v_bad[v_idx][v_fea_idx]
+                    v_features_A[v_idx][v_fea_idx][2*instance_idx] = v_good[v_idx][v_fea_idx]
+                    v_features_B[v_idx][v_fea_idx][2*instance_idx] = v_bad[v_idx][v_fea_idx]
+
+                    v_features_B[v_idx][v_fea_idx][2*instance_idx+1] = v_good[v_idx][v_fea_idx]
+                    v_features_A[v_idx][v_fea_idx][2*instance_idx+1] = v_bad[v_idx][v_fea_idx]
 
             for e_idx in range(3):
                 for e_fea_idx in range(len(e_good[e_idx])):
-                    if label:
-                        e_features_A[e_idx][e_fea_idx][instance_idx] = e_good[e_idx][e_fea_idx]
-                        e_features_B[e_idx][e_fea_idx][instance_idx] = e_bad[e_idx][e_fea_idx]
-                    else:
-                        e_features_B[e_idx][e_fea_idx][instance_idx] = e_good[e_idx][e_fea_idx]
-                        e_features_A[e_idx][e_fea_idx][instance_idx] = e_bad[e_idx][e_fea_idx]
+                    e_features_A[e_idx][e_fea_idx][2*instance_idx] = e_good[e_idx][e_fea_idx]
+                    e_features_B[e_idx][e_fea_idx][2*instance_idx] = e_bad[e_idx][e_fea_idx]
+
+                    e_features_B[e_idx][e_fea_idx][2*instance_idx+1] = e_good[e_idx][e_fea_idx]
+                    e_features_A[e_idx][e_fea_idx][2*instance_idx+1] = e_bad[e_idx][e_fea_idx]
 
         for features in [v_features_A, e_features_A, v_features_B, e_features_B]:
             for feature in features:
