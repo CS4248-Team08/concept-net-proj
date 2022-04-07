@@ -1,4 +1,3 @@
-
 from __future__ import division
 
 import numpy as np
@@ -12,15 +11,19 @@ from dataset import Dataset
 from multiprocessing import Pool
 import time
 from datetime import datetime
+import pickle
+from sklearn.metrics import f1_score, recall_score, precision_score
 
-
-def train(dataset, fea_len, num_iter=4000, N=1000, out_file='train.log'):
+def train(dataset, fea_len, num_iter=4000, N=1000, device='cuda', path_enc_type="LSTM", feature_enc_type='proj+mean', out_file='train.log'):
     if isinstance(out_file, str):
         out_file = open(out_file, 'w')
+    out_file.write("epoch,loss\n")
 
     print('defining architecture')
     encoder = ChainEncoder(dataset.get_v_fea_len(),
-                           dataset.get_e_fea_len(), fea_len, 'last')
+                           dataset.get_e_fea_len(),
+                           out_length=fea_len, pooling='mean',
+                           path_encode_type=path_enc_type, feature_encode_type=feature_enc_type)
     predictor = Predictor(fea_len)
     # model = JointModel(dataset.get_v_fea_len(), dataset.get_e_fea_len(), fea_len, 'last')
     loss = nn.NLLLoss()
@@ -33,9 +36,11 @@ def train(dataset, fea_len, num_iter=4000, N=1000, out_file='train.log'):
     optimizer = optim.Adam(list(encoder.parameters()) +
                            list(predictor.parameters()))
     # optimizer = optim.Adam(model.parameters())
-
+    iters_per_epoch = dataset.train_size // N
     print('Start training')
     start = time.time()
+    encoder.train()
+    epoch_loss = 0
     for train_iter in range(num_iter):
         chains_A, chains_B, y = dataset.get_train_pairs(N)
         output_A = encoder(chains_A)
@@ -46,12 +51,14 @@ def train(dataset, fea_len, num_iter=4000, N=1000, out_file='train.log'):
         loss_val = loss(logSoftmax_output, y)
         loss_val.backward()
         optimizer.step()
+        epoch_loss += loss_val.item()
 
-        if train_iter % 100 == 0:
+        if train_iter > 0 and (train_iter+1) % iters_per_epoch == 0:
             print(
-                f"Progress: {100*train_iter/num_iter:.2f}%, loss: {loss_val.item()}, time spent: {(time.time() - start)/60:.2f} minutes")
+                f"Progress: {100*train_iter/num_iter:.2f}%, loss: {epoch_loss}, time spent: {(time.time() - start)/60:.2f} minutes")
 
-            out_file.write(f"{train_iter}, loss: {loss_val.item()}\n")
+            out_file.write(f"{train_iter//iters_per_epoch}, {epoch_loss}\n")
+            epoch_loss = 0
             torch.save(encoder.state_dict(),
                        f'ckpt/{train_iter}_encoder.model')
             torch.save(predictor.state_dict(),
@@ -62,13 +69,17 @@ def train(dataset, fea_len, num_iter=4000, N=1000, out_file='train.log'):
     return encoder, predictor, loss
 
 
-def test(dataset, encoder, predictor, loss, out_file='test.log'):
+def test(dataset, encoder, predictor, loss, config=None, out_file='test.log'):
     if isinstance(out_file, str):
         out_file = open(out_file, 'a')
+        
+    if config:
+        feature_enc_len, feature_enc_type, path_enc_type, N, num_epoch = config
 
     print("Start testing")
     chains_A, chains_B, y = dataset.get_test_pairs(randomize_dir=True, return_id=False)
 
+    encoder.eval()
     with torch.no_grad():
         output_test_A = encoder(chains_A)
         output_test_B = encoder(chains_B)
@@ -79,30 +90,13 @@ def test(dataset, encoder, predictor, loss, out_file='test.log'):
         y = y.to(device='cpu').numpy()
 
         cur_acc = (pred == y).sum() / len(y)
+        recall = recall_score(y, pred)
+        precision = precision_score(y, pred)
+        f1 = f1_score(y, pred)
 
-        print(f'test acc: {cur_acc}')
+        print(f'Test accuracy: {cur_acc}, recall: {recall}, precision: {precision}, f1: {f1}')
         out_file.write("Test time: {}\n".format(datetime.now().strftime("%d/%m/%Y %H:%M:%S")))
-        out_file.write(f'{cur_acc}\n\n')
+        out_file.write(f"Test config: feature_enc_len:{feature_enc_len}, feature_enc_type:{feature_enc_type}, path_enc_type:{path_enc_type}, N:{N}, epoch:{num_epoch}\n")
+        out_file.write(f'Test accuracy: {cur_acc}, recall: {recall}, precision: {precision}, f1: {f1}\n\n')
 
     out_file.close()
-
-
-#torch.autograd.set_detect_anomaly(True)
-use_gpu = True
-device = "cuda" if use_gpu and torch.cuda.is_available() else "cpu"
-print(f"Using device: {device}")
-
-features = ['v_enc_dim300', 'v_freq_freq', 'v_deg', 'v_sense', 'e_vertexsim',
-            'e_dir', 'e_rel', 'e_weightsource', 'e_srank_rel', 'e_trank_rel', 'e_sense']
-feature_len = 20
-split_frac = 0.8
-dataset = Dataset(features, split_frac, device)
-
-
-num_epoch = 500
-N = 1024  # batch size
-num_iter = num_epoch * dataset.train_size//N
-print(f'Batch size: {N}, Number of iter: {num_iter}')
-
-encoder, predictor, loss = train(dataset, feature_len, num_iter, N)
-test(dataset, encoder, predictor, loss)
