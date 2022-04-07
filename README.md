@@ -6,4 +6,8 @@ The fine-tuned BERT-base model can be found [here](https://github.com/CS4248-Tea
 
 The variants of LSTM and TransformerEncoder models can be found [here](https://github.com/CS4248-Team08/concept-net-proj/tree/wp/LSTM-and-TransformerEncoder).
 
+The GTP2 model can be found [here](https://github.com/CS4248-Team08/concept-net-proj/tree/raymond/GPT2).
+
+The fine-tuned DistilBERT model can be found [here](https://github.com/CS4248-Team08/concept-net-proj/tree/wp/DistilBERT-finetune)
+
 The enriched dataset with Knowledge Graph Embeddings can be found [here](https://github.com/CS4248-Team08/concept-net-proj/tree/sqf/KG-Embedding).
