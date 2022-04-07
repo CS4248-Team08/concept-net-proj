@@ -19,7 +19,7 @@ def train(dataset, fea_len, num_iter=4000, N=1000, learning_rate=0.001, device='
           feature_enc_type='proj+mean', out_file='train.log'):
     if isinstance(out_file, str):
         out_file = open(out_file, 'w')
-    out_file.write("epoch,train_loss,train_acc,val_loss,val_acc\n")
+    out_file.write("epoch,loss\n")
 
     print('defining architecture')
     encoder = ChainEncoder(dataset.get_v_fea_len(),
@@ -42,13 +42,9 @@ def train(dataset, fea_len, num_iter=4000, N=1000, learning_rate=0.001, device='
     print('Start training')
     start = time.time()
     encoder.train()
-    predictor.train()
     epoch_loss = 0
     for train_iter in range(num_iter):
         chains_A, chains_B, y = dataset.get_train_pairs(N)
-        val_A, val_B, val_y = dataset.get_test_pairs(randomize_dir=True, return_id=False)
-        val_y_cpu = val_y.to('cpu').numpy()
-
         output_A = encoder(chains_A)
         output_B = encoder(chains_B)
         logSoftmax_output = predictor(output_A, output_B)
@@ -60,32 +56,15 @@ def train(dataset, fea_len, num_iter=4000, N=1000, learning_rate=0.001, device='
         epoch_loss += loss_val.item()
 
         if train_iter > 0 and (train_iter + 1) % iters_per_epoch == 0:
-            encoder.eval()
-            predictor.eval()
-            with torch.no_grad():
-                val_A = encoder(val_A)
-                val_B = encoder(val_B)
-                val_output = predictor(val_A, val_B)
-                val_loss = loss(val_output, val_y)
-                y = y.to('cpu').numpy()
-                train_pred = logSoftmax_output.to('cpu').numpy().argmax(axis=1)
-                val_pred = val_output.to('cpu').numpy().argmax(axis=1)
-                train_acc = (train_pred == y).sum() / len(y)
-                val_acc = (val_pred == val_y_cpu).sum() / len(val_y)
+            print(
+                f"Progress: {100 * train_iter / num_iter:.2f}%, loss: {epoch_loss}, time spent: {(time.time() - start) / 60:.2f} minutes")
 
-                print(
-                    f"Progress: {100 * (train_iter+1) / num_iter:.2f}%, loss: {epoch_loss}, acc: {train_acc}, time spent: {(time.time() - start) / 60:.2f} minutes")
-
-                out_file.write(
-                    f"{(train_iter+1) // iters_per_epoch},{epoch_loss / (iters_per_epoch * N)},{train_acc},{val_loss / len(val_y)},{val_acc}\n")
-                epoch_loss = 0
-                torch.save(encoder.state_dict(),
-                           f'ckpt/{train_iter}_encoder.model')
-                torch.save(predictor.state_dict(),
-                           f'ckpt/{train_iter}_predictor.model')
-
-            encoder.train()
-            predictor.eval()
+            out_file.write(f"{train_iter // iters_per_epoch}, {epoch_loss}\n")
+            epoch_loss = 0
+            torch.save(encoder.state_dict(),
+                       f'ckpt/{train_iter}_encoder.model')
+            torch.save(predictor.state_dict(),
+                       f'ckpt/{train_iter}_predictor.model')
 
     print(f'Finish training, time spent: {(time.time() - start) / 60:.2f} minutes')
     out_file.close()

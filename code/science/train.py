@@ -17,7 +17,7 @@ feature_enc_len = 20
 feature_enc_type = 'proj+mean'  # 'proj+mean' OR 'concat+proj'
 path_enc_type = "LSTM"  # 'RNN' OR 'LSTM' OR 'Attention'
 
-num_epoch = 300
+num_epoch = 400
 N = 1024  # batch size
 num_iter = num_epoch * dataset.train_size//N
 print(f"Config: feature_enc_len:{feature_enc_len}, path_enc_type:{path_enc_type}, feature_enc_type:{feature_enc_type}, N:{N}, n_epoch:{num_epoch}")
